@@ -13,8 +13,8 @@ export default function RootLayout({ children }) {
         <Navbar />
         <main>{children}</main>
         <footer className="site-footer">
-          <span>English 8</span>
-          <span>Lesson 1 · My Nationality</span>
+          <span>English 8 · Lesson 1 · My Nationality</span>
+          <span>Interactive learning project</span>
         </footer>
       </body>
     </html>
