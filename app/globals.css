@@ -13,7 +13,6 @@
 }
 
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
 body {
   margin: 0;
   background:
@@ -130,7 +129,7 @@ a { color: inherit; text-decoration: none; }
   transition: .2s ease;
 }
 .feature-card:hover { transform: translateY(-3px); border-color: #3b4a68; }
-.feature-icon { font-size: 1.65rem; }
+.feature-icon { width: 32px; height: 32px; color: var(--accent-2); }\n.feature-icon svg { width: 100%; height: 100%; }
 .feature-card h2 { margin: 22px 0 7px; }
 .feature-card p, .section-card p, .cta-card p, .prose p, .prose li { color: var(--muted); }
 .card-link, .text-link { color: var(--accent-2); font-weight: 700; }
@@ -227,7 +226,7 @@ a { color: inherit; text-decoration: none; }
   outline: none;
 }
 .country-browser input:focus { border-color: var(--accent); }
-.country-results { margin-top: 8px; display: grid; gap: 4px; max-height: 230px; overflow: auto; }
+.country-search-label { display: flex; justify-content: space-between; align-items: center; gap: 10px; }\n.clear-search { border: 0; background: transparent; color: var(--accent-2); padding: 2px 0; font-size: .76rem; font-weight: 700; }\n.country-results { margin-top: 8px; display: grid; gap: 4px; max-height: 260px; overflow: auto; }
 .country-results button {
   display: flex;
   justify-content: space-between;
@@ -240,7 +239,7 @@ a { color: inherit; text-decoration: none; }
   padding: 8px;
   font-size: .84rem;
 }
-.country-results button:hover { background: #151e2e; }
+.country-results button:hover, .country-results button.selected { background: #151e2e; }\n.country-results button:focus-visible, .clear-search:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }\n.country-empty, .country-count { color: var(--muted); font-size: .78rem; margin: 8px 0 0; }\n.country-count { margin-top: 10px; }
 .country-results button span:last-child { color: var(--muted); }
 
 .progress-track {
@@ -360,7 +359,7 @@ a { color: inherit; text-decoration: none; }
     border-top: 1px solid var(--border);
   }
   .mobile-nav::-webkit-scrollbar { display: none; }
-  .mobile-nav-link { flex: 1 0 68px; }
+  .mobile-nav-link { flex: 1 1 0; min-width: 0; }
   body { padding-bottom: 0; }
   .page-shell { padding-bottom: 104px; }
   .map-layout { grid-template-columns: 1fr; }
@@ -373,7 +372,7 @@ a { color: inherit; text-decoration: none; }
   .hero h1 { font-size: clamp(2.8rem, 14vw, 4.5rem); }
   .feature-grid, .pattern-grid, .vocab-grid { grid-template-columns: 1fr; }
   .lesson-preview, .cta-card { align-items: flex-start; flex-direction: column; }
-  .map-canvas { min-height: 270px; padding: 4px; }
+  .map-canvas { min-height: 340px; padding: 4px; }
   .map-toolbar { align-items: flex-start; flex-direction: column; gap: 6px; }
   .map-hint { align-self: flex-start; }
   .country-panel h2 { font-size: 1.7rem; }
@@ -384,5 +383,63 @@ a { color: inherit; text-decoration: none; }
   *, *::before, *::after {
     scroll-behavior: auto !important;
     transition: none !important;
+  }
+}
+
+
+.rsm-geography.country-shape {
+  fill: #202b40;
+  stroke: #0d1320;
+  stroke-width: .55;
+  outline: none;
+  cursor: pointer;
+  transition: fill .15s ease, stroke .15s ease, stroke-width .15s ease;
+}
+
+.rsm-geography.country-shape:hover {
+  fill: #8190ff;
+  stroke: #aeb8ff;
+  stroke-width: .8;
+}
+
+.rsm-geography.country-shape.selected {
+  fill: #6d7cff;
+}
+
+.rsm-geography.country-shape.selected:hover {
+  fill: #8190ff;
+}
+
+.rsm-geography.country-shape:focus-visible {
+  fill: #8190ff;
+  stroke: #ffffff;
+  stroke-width: 1.5;
+}
+
+.rsm-geography.country-shape.unavailable {
+  fill: #182235;
+  cursor: not-allowed;
+  opacity: .65;
+}
+
+.error-card h1 {
+  margin-bottom: 12px;
+}
+
+@media (max-width: 420px) {
+  .mobile-nav-link {
+    font-size: .62rem;
+    padding-inline: 4px;
+  }
+
+  .mobile-nav svg {
+    width: 19px;
+    height: 19px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rsm-geography.country-shape {
+    transition: none;
   }
 }
