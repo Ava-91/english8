@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { ComposableMap, Geographies, Geography } from "react-simple-maps";
 import worldAtlas from "world-atlas/countries-110m.json";
 import { countries, countryById, countryByName } from "@/data/countries";
@@ -31,20 +31,8 @@ export default function WorldMap() {
   const [selected, setSelected] = useState(countryById["364"]);
   const [query, setQuery] = useState("");
 
-  useEffect(() => {
-    const value = new URLSearchParams(window.location.search).get("country");
-    if (!value) return;
-
-    const byName = countryByName[normalize(value)];
-    const byId = countryById[String(value).padStart(3, "0")];
-    if (byName || byId) setSelected(byName || byId);
-  }, []);
-
   const selectCountry = (country) => {
     setSelected(country);
-    const url = new URL(window.location.href);
-    url.searchParams.set("country", country.name);
-    window.history.replaceState({}, "", url);
   };
 
   const filteredCountries = useMemo(() => {
