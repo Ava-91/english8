@@ -1,10 +1,11 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ComposableMap, Geographies, Geography } from "react-simple-maps";
+import worldAtlas from "world-atlas/countries-110m.json";
 import { countries, countryById, countryByName } from "@/data/countries";
 
-const GEO_URL = "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json";
+const featuredIds = ["364", "392", "276", "250", "840", "826", "156", "076", "124", "036", "410", "643"];
 
 const continents = [
   { name: "North America", x: 130, y: 105 },
@@ -15,26 +16,50 @@ const continents = [
   { name: "Oceania", x: 760, y: 330 },
 ];
 
+const normalize = (value) => value?.trim().toLowerCase();
+
+const countryKey = (country) => `${country.id}:${country.name}`;
+
+const resolveCountry = (geo) => {
+  const name = normalize(geo.properties?.name);
+  return (name && countryByName[name]) || countryById[String(geo.id).padStart(3, "0")];
+};
+
+const featuredCountries = featuredIds.map((id) => countryById[id]).filter(Boolean);
+
 export default function WorldMap() {
-  const [selectedId, setSelectedId] = useState("364");
+  const [selected, setSelected] = useState(countryById["364"]);
   const [query, setQuery] = useState("");
 
-  const selected = countryById[selectedId] || {
-    name: "Choose a country",
-    nationality: "—",
-    sentence: "Click a country on the map to begin.",
+  useEffect(() => {
+    const value = new URLSearchParams(window.location.search).get("country");
+    if (!value) return;
+
+    const byName = countryByName[normalize(value)];
+    const byId = countryById[String(value).padStart(3, "0")];
+    if (byName || byId) setSelected(byName || byId);
+  }, []);
+
+  const selectCountry = (country) => {
+    setSelected(country);
+    const url = new URL(window.location.href);
+    url.searchParams.set("country", country.name);
+    window.history.replaceState({}, "", url);
   };
 
   const filteredCountries = useMemo(() => {
-    const value = query.trim().toLowerCase();
-    if (!value) return countries.slice(0, 12);
+    const value = normalize(query);
+    if (!value) return featuredCountries;
+
     return countries
       .filter((country) =>
-        country.name.toLowerCase().includes(value) ||
-        country.nationality.toLowerCase().includes(value)
+        normalize(country.name).includes(value) ||
+        normalize(country.nationality).includes(value)
       )
-      .slice(0, 12);
+      .slice(0, 20);
   }, [query]);
+
+  const hasSearch = query.trim().length > 0;
 
   return (
     <section className="map-layout">
@@ -44,7 +69,7 @@ export default function WorldMap() {
             <div className="section-kicker">INTERACTIVE MAP</div>
             <p>Countries only · no cities · no capitals</p>
           </div>
-          <div className="map-hint">Click a country</div>
+          <div className="map-hint">Select a country</div>
         </div>
 
         <div className="map-canvas">
@@ -55,68 +80,52 @@ export default function WorldMap() {
             height={480}
             aria-label="Interactive world map"
           >
-            <Geographies geography={GEO_URL}>
-              {({ geographies }) =>
-                geographies.map((geo) => {
-                  const id = String(geo.id).padStart(3, "0");
-                  const isSelected = id === selectedId;
+            <Geographies geography={worldAtlas}>
+              {({ geographies }) => (
+                <>
+                  {geographies.map((geo) => {
+                    const country = resolveCountry(geo);
+                    const isSelected = country && countryKey(country) === countryKey(selected);
 
-                  return (
-                    <Geography
-                      key={geo.rsmKey}
-                      geography={geo}
-                      onClick={() => {
-                        const name = geo.properties?.name;
-                        const match = countryById[id] || (name && countryByName[name.toLowerCase()]);
-                        if (match) setSelectedId(match.id);
-                      }}
-                      onKeyDown={(event) => {
-                        if (event.key === "Enter" || event.key === " ") {
-                          event.preventDefault();
-                          const name = geo.properties?.name;
-                          const match = countryById[id] || (name && countryByName[name.toLowerCase()]);
-                          if (match) setSelectedId(match.id);
-                        }
-                      }}
-                      tabIndex={0}
-                      role="button"
-                      aria-label={geo.properties?.name || "Country"}
-                      className="country-shape"
-                      style={{
-                        default: {
-                          fill: isSelected ? "#6d7cff" : "#202b40",
-                          outline: "none",
-                          stroke: "#0d1320",
-                          strokeWidth: 0.55,
-                        },
-                        hover: {
-                          fill: "#8190ff",
-                          outline: "none",
-                          stroke: "#aeb8ff",
-                          strokeWidth: 0.8,
-                        },
-                        pressed: {
-                          fill: "#aeb8ff",
-                          outline: "none",
-                        },
-                      }}
-                    />
-                  );
-                })
-              }
+                    return (
+                      <Geography
+                        key={geo.rsmKey}
+                        geography={geo}
+                        onClick={() => country && selectCountry(country)}
+                        onKeyDown={(event) => {
+                          if ((event.key === "Enter" || event.key === " ") && country) {
+                            event.preventDefault();
+                            selectCountry(country);
+                          }
+                        }}
+                        tabIndex={0}
+                        role="button"
+                        aria-label={country ? country.name : geo.properties?.name || "Country"}
+                        aria-pressed={isSelected}
+                        aria-disabled={!country}
+                        className={[
+                          "country-shape",
+                          isSelected ? "selected" : "",
+                          !country ? "unavailable" : "",
+                        ].filter(Boolean).join(" ")}
+                      />
+                    );
+                  })}
+
+                  {continents.map((continent) => (
+                    <text
+                      key={continent.name}
+                      x={continent.x}
+                      y={continent.y}
+                      className="continent-label"
+                      textAnchor="middle"
+                    >
+                      {continent.name}
+                    </text>
+                  ))}
+                </>
+              )}
             </Geographies>
-
-            {continents.map((continent) => (
-              <text
-                key={continent.name}
-                x={continent.x}
-                y={continent.y}
-                className="continent-label"
-                textAnchor="middle"
-              >
-                {continent.name}
-              </text>
-            ))}
           </ComposableMap>
         </div>
       </div>
@@ -126,33 +135,61 @@ export default function WorldMap() {
           <div className="section-kicker">SELECTED COUNTRY</div>
           <span className="country-dot" />
         </div>
+
         <h2>{selected.name}</h2>
         <div className="nationality-label">NATIONALITY</div>
         <div className="nationality-value">{selected.nationality}</div>
         <p className="country-sentence">{selected.sentence}</p>
 
         <div className="country-browser">
-          <label htmlFor="country-search">Find a country</label>
+          <div className="country-search-label">
+            <label htmlFor="country-search">Find a country</label>
+            {hasSearch && (
+              <button
+                className="clear-search"
+                type="button"
+                onClick={() => setQuery("")}
+                aria-label="Clear country search"
+              >
+                Clear
+              </button>
+            )}
+          </div>
+
           <input
             id="country-search"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder="Search..."
+            placeholder="Search country or nationality..."
+            autoComplete="off"
           />
-          <div className="country-results">
-            {filteredCountries.map((country) => (
-              <button
-                key={country.id}
-                onClick={() => {
-                  setSelectedId(country.id);
-                  setQuery("");
-                }}
-              >
-                <span>{country.name}</span>
-                <span>{country.nationality}</span>
-              </button>
-            ))}
+
+          <div className="country-results" aria-live="polite">
+            {filteredCountries.length > 0 ? (
+              filteredCountries.map((country) => (
+                <button
+                  key={country.id}
+                  type="button"
+                  className={countryKey(country) === countryKey(selected) ? "selected" : ""}
+                  onClick={() => {
+                    selectCountry(country);
+                    setQuery("");
+                  }}
+                >
+                  <span>{country.name}</span>
+                  <span>{country.nationality}</span>
+                </button>
+              ))
+            ) : (
+              <p className="country-empty">No matching country found.</p>
+            )}
           </div>
+
+          <p className="country-count">
+            {hasSearch
+              ? "Showing up to 20 matches from " + countries.length + " countries."
+              : countries.length + " countries available to search."}
+          </p>
         </div>
       </aside>
     </section>
