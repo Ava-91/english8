@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { questions } from "@/data/questions";
 
 export default function PracticePage() {
@@ -34,10 +34,16 @@ export default function PracticePage() {
     setFinished(false);
   };
 
+  useEffect(() => {
+    if (selected !== null) {
+      document.getElementById("quiz-feedback")?.focus();
+    }
+  }, [selected]);
+
   if (finished) {
     return (
       <div className="page-shell narrow">
-        <section className="result-card">
+        <section className="result-card" aria-live="polite">
           <div className="result-icon">✓</div>
           <div className="eyebrow">QUIZ COMPLETE</div>
           <h1>{score} / {questions.length}</h1>
@@ -57,8 +63,15 @@ export default function PracticePage() {
       <section className="page-heading">
         <div className="eyebrow">PRACTICE · {current + 1} / {questions.length}</div>
         <h1>Check your knowledge</h1>
-        <div className="progress-track" aria-label={`Question progress: ${progress}%`}>
-          <span style={{ width: `${progress}%` }} />
+        <div
+          className="progress-track"
+          role="progressbar"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          aria-valuenow={progress}
+          aria-label={"Question progress: " + progress + "%"}
+        >
+          <span style={{ width: progress + "%" }} />
         </div>
       </section>
 
@@ -70,7 +83,7 @@ export default function PracticePage() {
             const isWrong = selected === option && option !== question.answer;
             return (
               <button
-                className={`answer-option ${isCorrect ? "correct" : ""} ${isWrong ? "wrong" : ""}`}
+                className={"answer-option " + (isCorrect ? "correct " : "") + (isWrong ? "wrong" : "")}
                 key={option}
                 onClick={() => choose(option)}
                 disabled={selected !== null}
@@ -84,7 +97,13 @@ export default function PracticePage() {
         </div>
 
         {selected !== null && (
-          <div className={`feedback ${selected === question.answer ? "good" : "bad"}`}>
+          <div
+            id="quiz-feedback"
+            className={"feedback " + (selected === question.answer ? "good" : "bad")}
+            tabIndex={-1}
+            role="status"
+            aria-live="polite"
+          >
             <strong>{selected === question.answer ? "Correct!" : "Not quite."}</strong>
             <span>{question.explanation}</span>
           </div>
