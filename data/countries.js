@@ -223,4 +223,10 @@ export const countryByName = Object.fromEntries(
   [...countries, ...mapExtras].map((country) => [country.name.toLowerCase(), country])
 );
 
+export const mapExtraById = Object.fromEntries(
+  mapExtras
+    .filter((country) => !country.id.includes("-"))
+    .map((country) => [country.id, country])
+);
+
 export const allMapCountries = [...countries, ...mapExtras];
