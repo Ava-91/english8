@@ -22,7 +22,8 @@ const countryKey = (country) => `${country.id}:${country.name}`;
 
 const resolveCountry = (geo) => {
   const name = normalize(geo.properties?.name);
-  const id = String(geo.id).padStart(3, "0");\n  return (name && countryByName[name]) || countryById[id] || mapExtraById[id];
+  const id = String(geo.id).padStart(3, "0");
+  return (name && countryByName[name]) || countryById[id] || mapExtraById[id];
 };
 
 const featuredCountries = featuredIds.map((id) => countryById[id]).filter(Boolean);
