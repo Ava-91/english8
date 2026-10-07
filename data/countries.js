@@ -48,7 +48,7 @@ const rawCountries = [
   ["826","United Kingdom","British"],["840","United States","American"],["858","Uruguay","Uruguayan"],
   ["860","Uzbekistan","Uzbek"],["548","Vanuatu","Ni-Vanuatu"],["862","Venezuela","Venezuelan"],
   ["704","Vietnam","Vietnamese"],["887","Yemen","Yemeni"],["894","Zambia","Zambian"],
-  ["716","Zimbabwe","Zimbabwean"],["554","New Zealand","New Zealander"],["392","Japan","Japanese"]
+  ["716","Zimbabwe","Zimbabwean"]
 ];
 
 export const countries = Array.from(
@@ -67,4 +67,8 @@ export const countries = Array.from(
 
 export const countryById = Object.fromEntries(
   countries.map((country) => [country.id, country])
+);
+
+export const countryByName = Object.fromEntries(
+  countries.map((country) => [country.name.toLowerCase(), country])
 );
