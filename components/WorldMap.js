@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { ComposableMap, Geographies, Geography } from "react-simple-maps";
-import { countries, countryById } from "@/data/countries";
+import { countries, countryById, countryByName } from "@/data/countries";
 
 const GEO_URL = "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json";
 
@@ -65,11 +65,17 @@ export default function WorldMap() {
                     <Geography
                       key={geo.rsmKey}
                       geography={geo}
-                      onClick={() => setSelectedId(id)}
+                      onClick={() => {
+                        const name = geo.properties?.name;
+                        const match = countryById[id] || (name && countryByName[name.toLowerCase()]);
+                        if (match) setSelectedId(match.id);
+                      }}
                       onKeyDown={(event) => {
                         if (event.key === "Enter" || event.key === " ") {
                           event.preventDefault();
-                          setSelectedId(id);
+                          const name = geo.properties?.name;
+                          const match = countryById[id] || (name && countryByName[name.toLowerCase()]);
+                          if (match) setSelectedId(match.id);
                         }
                       }}
                       tabIndex={0}
