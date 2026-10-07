@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { ComposableMap, Geographies, Geography } from "react-simple-maps";
 import worldAtlas from "world-atlas/countries-110m.json";
-import { countries, countryById, countryByName } from "@/data/countries";
+import { countries, countryById, countryByName, mapExtraById } from "@/data/countries";
 
 const featuredIds = ["364", "392", "276", "250", "840", "826", "156", "076", "124", "036", "410", "643"];
 
@@ -22,7 +22,7 @@ const countryKey = (country) => `${country.id}:${country.name}`;
 
 const resolveCountry = (geo) => {
   const name = normalize(geo.properties?.name);
-  return (name && countryByName[name]) || countryById[String(geo.id).padStart(3, "0")];
+  const id = String(geo.id).padStart(3, "0");\n  return (name && countryByName[name]) || countryById[id] || mapExtraById[id];
 };
 
 const featuredCountries = featuredIds.map((id) => countryById[id]).filter(Boolean);
