@@ -37,6 +37,29 @@ function Icon({ name }) {
   return <svg {...common}><circle cx="12" cy="12" r="9" /><path d="M12 10v6M12 7h.01" /></svg>;
 }
 
+function MobileNav() {
+  const pathname = usePathname();
+
+  const isActive = (href) =>
+    href === "/" ? pathname === "/" : pathname.startsWith(href);
+
+  return (
+    <nav className="mobile-nav" aria-label="Mobile navigation">
+      {links.map((link) => (
+        <Link
+          className={isActive(link.href) ? "mobile-nav-link active" : "mobile-nav-link"}
+          href={link.href}
+          key={link.href}
+          aria-current={isActive(link.href) ? "page" : undefined}
+        >
+          <Icon name={link.icon} />
+          <span>{link.label}</span>
+        </Link>
+      ))}
+    </nav>
+  );
+}
+
 export default function Navbar() {
   const pathname = usePathname();
 
@@ -44,40 +67,30 @@ export default function Navbar() {
     href === "/" ? pathname === "/" : pathname.startsWith(href);
 
   return (
-    <header className="site-header">
-      <div className="nav-shell">
-        <Link className="brand" href="/">
-          <span className="brand-mark">E8</span>
-          <span>English 8</span>
-        </Link>
-
-        <nav className="desktop-nav" aria-label="Main navigation">
-          {links.map((link) => (
-            <Link
-              className={isActive(link.href) ? "nav-link active" : "nav-link"}
-              href={link.href}
-              key={link.href}
-              aria-current={isActive(link.href) ? "page" : undefined}
-            >
-              {link.label}
-            </Link>
-          ))}
-        </nav>
-      </div>
-
-      <nav className="mobile-nav" aria-label="Mobile navigation">
-        {links.map((link) => (
-          <Link
-            className={isActive(link.href) ? "mobile-nav-link active" : "mobile-nav-link"}
-            href={link.href}
-            key={link.href}
-            aria-current={isActive(link.href) ? "page" : undefined}
-          >
-            <Icon name={link.icon} />
-            <span>{link.label}</span>
+    <>
+      <header className="site-header">
+        <div className="nav-shell">
+          <Link className="brand" href="/">
+            <span className="brand-mark">E8</span>
+            <span>English 8</span>
           </Link>
-        ))}
-      </nav>
-    </header>
+
+          <nav className="desktop-nav" aria-label="Main navigation">
+            {links.map((link) => (
+              <Link
+                className={isActive(link.href) ? "nav-link active" : "nav-link"}
+                href={link.href}
+                key={link.href}
+                aria-current={isActive(link.href) ? "page" : undefined}
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
+        </div>
+      </header>
+
+      <MobileNav />
+    </>
   );
 }
