@@ -60,11 +60,18 @@ export default function WorldMap() {
                 geographies.map((geo) => {
                   const id = String(geo.id).padStart(3, "0");
                   const isSelected = id === selectedId;
+
                   return (
                     <Geography
                       key={geo.rsmKey}
                       geography={geo}
                       onClick={() => setSelectedId(id)}
+                      onKeyDown={(event) => {
+                        if (event.key === "Enter" || event.key === " ") {
+                          event.preventDefault();
+                          setSelectedId(id);
+                        }
+                      }}
                       tabIndex={0}
                       role="button"
                       aria-label={geo.properties?.name || "Country"}
@@ -92,6 +99,7 @@ export default function WorldMap() {
                 })
               }
             </Geographies>
+
             {continents.map((continent) => (
               <text
                 key={continent.name}
