@@ -35,6 +35,7 @@ export default function WorldMap() {
   const [pan, setPan] = useState({ x: 0, y: 0 });
   const pointers = useRef(new Map());
   const gesture = useRef(null);
+  const dragged = useRef(false);
 
   const filteredCountries = useMemo(() => {
     const value = normalize(query);
@@ -86,7 +87,6 @@ export default function WorldMap() {
       moved: false,
     };
     pointers.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
-    event.currentTarget.setPointerCapture?.(event.pointerId);
     if (pointers.current.size === 2) {
       const [a, b] = [...pointers.current.values()];
       gesture.current.pinch = {
@@ -106,6 +106,7 @@ export default function WorldMap() {
       const [a, b] = [...pointers.current.values()];
       const pinch = gesture.current?.pinch;
       if (!pinch) return;
+      dragged.current = true;
       const currentDistance = distance(a, b);
       const nextZoom = Math.max(MIN_ZOOM, Math.min(
         MAX_ZOOM,
@@ -125,7 +126,10 @@ export default function WorldMap() {
     if (!start) return;
     const dx = event.clientX - start.last.x;
     const dy = event.clientY - start.last.y;
-    if (Math.abs(dx) + Math.abs(dy) > 4) start.moved = true;
+    if (Math.abs(dx) + Math.abs(dy) > 4) {
+      start.moved = true;
+      dragged.current = true;
+    }
     setPan((currentPan) => clampPan({ x: currentPan.x + dx, y: currentPan.y + dy }));
     start.last = { x: event.clientX, y: event.clientY };
   };
@@ -186,7 +190,13 @@ export default function WorldMap() {
                         <Geography
                           key={geo.rsmKey}
                           geography={geo}
-                          onClick={() => country && setSelected(country)}
+                          onClick={() => {
+                            if (dragged.current) {
+                              dragged.current = false;
+                              return;
+                            }
+                            if (country) setSelected(country);
+                          }}
                           onKeyDown={(event) => {
                             if ((event.key === "Enter" || event.key === " ") && country) {
                               event.preventDefault();
