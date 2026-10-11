@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { lessons } from "@/data/course";
 import QuickCheck from "@/components/QuickCheck";
+import { textbookLessons } from "@/data/textbook";
 
 export default function LessonContent({ id }) {
   const lesson = lessons.find((item) => item.id === Number(id));
@@ -8,6 +9,7 @@ export default function LessonContent({ id }) {
   const previous = lessons.find((item) => item.id === lesson.id - 1);
   const next = lessons.find((item) => item.id === lesson.id + 1);
   const practice = lesson.practice;
+  const textbook = textbookLessons[lesson.id];
 
   return (
     <div className="page-shell narrow">
@@ -16,6 +18,69 @@ export default function LessonContent({ id }) {
         <h1>{lesson.icon} {lesson.title}</h1>
         <p>{lesson.goal}</p>
       </section>
+
+      {textbook && (
+        <>
+          <section className="section-card">
+            <div className="section-kicker">FROM THE TEXTBOOK · PAGES {textbook.pages}</div>
+            <h2>{textbook.conversationTitle}</h2>
+            <div className="dialogue-list">
+              {textbook.conversation.map(([speaker, line], index) => (
+                <div className="dialogue-line" key={index}>
+                  <strong>{speaker}</strong>
+                  <p>{line}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section className="section-card">
+            <div className="section-kicker">TEXTBOOK KEY LANGUAGE</div>
+            <div className="pattern-grid">
+              {textbook.language.map(([question, answer]) => (
+                <article className="pattern-card" key={question}>
+                  <p className="pattern-question">{question}</p>
+                  <p className="pattern-answer">{answer}</p>
+                </article>
+              ))}
+            </div>
+          </section>
+
+          <section className="section-card">
+            <div className="section-kicker">TEXTBOOK WORD BANK</div>
+            <div className="vocab-grid">
+              {textbook.vocabulary.map((word) => (
+                <article className="vocab-card" key={word}><strong>{word}</strong></article>
+              ))}
+            </div>
+          </section>
+
+          <section className="section-card">
+            <div className="section-kicker">SPELLING & PRONUNCIATION</div>
+            <p><strong>Focus:</strong> {textbook.pronunciation.focus.join(" · ")}</p>
+            <p>{textbook.pronunciation.task}</p>
+          </section>
+
+          <section className="section-card">
+            <div className="section-kicker">LISTENING, SPEAKING & WRITING ACTIVITIES</div>
+            <div className="pattern-grid">
+              {textbook.activities.map((activity) => (
+                <article className="pattern-card" key={activity.title}>
+                  <p className="pattern-question">{activity.title}</p>
+                  <p>{activity.instruction}</p>
+                </article>
+              ))}
+            </div>
+          </section>
+
+          <section className="section-card">
+            <div className="section-kicker">TEXTBOOK REVIEW CHECKLIST</div>
+            <ul className="textbook-review-list">
+              {textbook.review.map((item) => <li key={item}>{item}</li>)}
+            </ul>
+          </section>
+        </>
+      )}
 
       <section className="section-card">
         <div className="section-kicker">SPEAKING PATTERNS</div>
