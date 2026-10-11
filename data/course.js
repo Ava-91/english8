@@ -71,9 +71,9 @@ export const lessons = [
       { question: "Are there any museums?", answer: "Yes, there are. / No, there aren't.", note: "Use “Are there any …?” for plural places." },
     ],
     vocabulary: [
-      ["museum", "a place to see objects of history or art", "Our city has a museum."], ["park", a public green space", "There is a park near my home."],
-      ["library", a place to read or borrow books", "The library is quiet."], ["metro", an underground city train system", "The metro is useful in a big city."],
-      ["center", the middle area of a place", "The shop is in the city center."], ["famous", known by many people", "The city is famous for its old buildings."],
+      ["museum", "a place to see objects of history or art", "Our city has a museum."], ["park", "a public green space", "There is a park near my home."],
+      ["library", "a place to read or borrow books", "The library is quiet."], ["metro", "an underground city train system", "The metro is useful in a big city."],
+      ["center", "the middle area of a place", "The shop is in the city center."], ["famous", "known by many people", "The city is famous for its old buildings."],
     ],
     sounds: "Practise the “th” sound in “think” and “three.” Notice that “ph” can sound like /f/, as in “phone.”",
     practice: { question: "Which question asks about plural places?", options: ["Is there a museum?", "Are there any museums?", "Where is the museum?"], answer: "Are there any museums?", explanation: "“Are there any …?” asks about more than one thing or place." },
