@@ -250,3 +250,15 @@ a { color: inherit; text-decoration: none; }
 .rsm-geography.country-shape:focus-visible { fill: #ffb4a9; stroke: #fff; stroke-width: 1.5; }
 .rsm-geography.country-shape.unavailable { fill: #d8e8ef; cursor: not-allowed; opacity: .75; }
 .error-card h1 { margin-bottom: 12px; }
+
+
+/* Textbook-aligned lesson content */
+.dialogue-list { display: grid; gap: 10px; margin-top: 16px; }
+.dialogue-line { display: grid; grid-template-columns: minmax(84px, 120px) minmax(0, 1fr); gap: 12px; align-items: start; padding: 13px 15px; border: 1px solid var(--border, #e8e2f4); border-radius: 16px; background: var(--surface, rgba(255,255,255,.75)); }
+.dialogue-line strong { color: var(--ink, #342d48); }
+.dialogue-line p { margin: 0; color: var(--ink, #342d48) !important; }
+.textbook-review-list { display: grid; gap: 10px; padding-left: 22px; margin: 14px 0 0; }
+.textbook-review-list li { padding-left: 4px; color: var(--ink, #342d48); line-height: 1.65; }
+@media (max-width: 560px) {
+  .dialogue-line { grid-template-columns: 1fr; gap: 4px; }
+}
