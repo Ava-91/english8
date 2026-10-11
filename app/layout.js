@@ -2,8 +2,8 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 
 export const metadata = {
-  title: "English 8 — My Nationality",
-  description: "An interactive English 8 learning website for Lesson 1: My Nationality.",
+  title: "English 8 — Learn, Explore, Practise",
+  description: "A colorful interactive English 8 learning website with seven lessons, vocabulary, speaking patterns, and practice.",
 };
 
 export default function RootLayout({ children }) {
@@ -13,7 +13,7 @@ export default function RootLayout({ children }) {
         <Navbar />
         <main>{children}</main>
         <footer className="site-footer">
-          <span>English 8 · Lesson 1 · My Nationality</span>
+          <span>English 8 · Seven lessons · Learn by doing</span>
           <span>Interactive learning project</span>
         </footer>
       </body>
