@@ -5,125 +5,90 @@ import { textbookLessons } from "@/data/textbook";
 
 export default function LessonContent({ id }) {
   const lesson = lessons.find((item) => item.id === Number(id));
-  if (!lesson) return null;
+  const textbook = textbookLessons[Number(id)];
+  if (!lesson || !textbook) return null;
+
   const previous = lessons.find((item) => item.id === lesson.id - 1);
   const next = lessons.find((item) => item.id === lesson.id + 1);
-  const practice = lesson.practice;
-  const textbook = textbookLessons[lesson.id];
 
   return (
     <div className="page-shell narrow">
       <section className="page-heading">
-        <div className="eyebrow">LESSON {lesson.id} OF 7 · {lesson.theme}</div>
-        <h1>{lesson.icon} {lesson.title}</h1>
-        <p>{lesson.goal}</p>
+        <div className="eyebrow">LESSON {lesson.id} OF 7 · TEXTBOOK PAGES {textbook.pages}</div>
+        <h1>{lesson.icon} {textbook.title}</h1>
+        <p>{textbook.theme}. Work through the textbook conversation, key language, vocabulary, pronunciation and classroom activities.</p>
       </section>
 
-      {textbook && (
-        <>
-          <section className="section-card">
-            <div className="section-kicker">FROM THE TEXTBOOK · PAGES {textbook.pages}</div>
-            <h2>{textbook.conversationTitle}</h2>
-            <div className="dialogue-list">
-              {textbook.conversation.map(([speaker, line], index) => (
-                <div className="dialogue-line" key={index}>
-                  <strong>{speaker}</strong>
-                  <p>{line}</p>
-                </div>
-              ))}
+      <section className="section-card">
+        <div className="section-kicker">TEXTBOOK CONVERSATION</div>
+        <h2>{textbook.conversationTitle}</h2>
+        <div className="dialogue-list">
+          {textbook.conversation.map(([speaker, line], index) => (
+            <div className="dialogue-line" key={index}>
+              <strong>{speaker}</strong>
+              <p>{line}</p>
             </div>
-          </section>
-
-          <section className="section-card">
-            <div className="section-kicker">TEXTBOOK KEY LANGUAGE</div>
-            <div className="pattern-grid">
-              {textbook.language.map(([question, answer]) => (
-                <article className="pattern-card" key={question}>
-                  <p className="pattern-question">{question}</p>
-                  <p className="pattern-answer">{answer}</p>
-                </article>
-              ))}
-            </div>
-          </section>
-
-          <section className="section-card">
-            <div className="section-kicker">TEXTBOOK WORD BANK</div>
-            <div className="vocab-grid">
-              {textbook.vocabulary.map((word) => (
-                <article className="vocab-card" key={word}><strong>{word}</strong></article>
-              ))}
-            </div>
-          </section>
-
-          <section className="section-card">
-            <div className="section-kicker">SPELLING & PRONUNCIATION</div>
-            <p><strong>Focus:</strong> {textbook.pronunciation.focus.join(" · ")}</p>
-            <p>{textbook.pronunciation.task}</p>
-          </section>
-
-          <section className="section-card">
-            <div className="section-kicker">LISTENING, SPEAKING & WRITING ACTIVITIES</div>
-            <div className="pattern-grid">
-              {textbook.activities.map((activity) => (
-                <article className="pattern-card" key={activity.title}>
-                  <p className="pattern-question">{activity.title}</p>
-                  <p>{activity.instruction}</p>
-                </article>
-              ))}
-            </div>
-          </section>
-
-          <section className="section-card">
-            <div className="section-kicker">TEXTBOOK REVIEW CHECKLIST</div>
-            <ul className="textbook-review-list">
-              {textbook.review.map((item) => <li key={item}>{item}</li>)}
-            </ul>
-          </section>
-        </>
-      )}
+          ))}
+        </div>
+      </section>
 
       <section className="section-card">
-        <div className="section-kicker">SPEAKING PATTERNS</div>
+        <div className="section-kicker">KEY LANGUAGE FROM THE BOOK</div>
         <div className="pattern-grid">
-          {lesson.patterns.map((item) => (
-            <article className="pattern-card" key={item.question}>
-              <p className="pattern-question">{item.question}</p>
-              <p className="pattern-answer">{item.answer}</p>
-              <p className="muted">{item.note}</p>
+          {textbook.language.map(([question, answer]) => (
+            <article className="pattern-card" key={question}>
+              <p className="pattern-question">{question}</p>
+              <p className="pattern-answer">{answer}</p>
             </article>
           ))}
         </div>
       </section>
 
       <section className="section-card">
-        <div className="section-kicker">WORD BANK</div>
+        <div className="section-kicker">TEXTBOOK VOCABULARY</div>
         <div className="vocab-grid">
-          {lesson.vocabulary.map(([term, meaning, example]) => (
-            <article className="vocab-card" key={term}>
-              <strong>{term}</strong>
-              <span>{meaning}</span>
-              <p>{example}</p>
+          {textbook.vocabulary.map((word) => (
+            <article className="vocab-card" key={word}><strong>{word}</strong></article>
+          ))}
+        </div>
+      </section>
+
+      <section className="section-card">
+        <div className="section-kicker">SPELLING & PRONUNCIATION</div>
+        <p><strong>Focus:</strong> {textbook.pronunciation.focus.join(" · ")}</p>
+        <p>{textbook.pronunciation.task}</p>
+      </section>
+
+      <section className="section-card">
+        <div className="section-kicker">LISTENING, SPEAKING, READING & WRITING</div>
+        <div className="pattern-grid">
+          {textbook.activities.map((activity) => (
+            <article className="pattern-card" key={activity.title}>
+              <p className="pattern-question">{activity.title}</p>
+              <p>{activity.instruction}</p>
             </article>
           ))}
         </div>
       </section>
 
       <section className="section-card">
-        <div className="section-kicker">SPEAK IT OUT ✨</div>
-        <p>{lesson.sounds}</p>
-        <p><strong>Try it:</strong> Read the example phrases aloud twice: slowly first, then at a natural speed.</p>
+        <div className="section-kicker">TEXTBOOK REVIEW CHECKLIST</div>
+        <ul className="textbook-review-list">
+          {textbook.review.map((item) => <li key={item}>{item}</li>)}
+        </ul>
       </section>
 
       <section className="section-card">
-        <div className="section-kicker">QUICK CHECK</div>
-        <QuickCheck practice={practice} />
+        <div className="section-kicker">EXTRA INTERACTIVE PRACTICE ✨</div>
+        <p>Try this additional check after studying the textbook material.</p>
+        <QuickCheck practice={lesson.practice} />
       </section>
 
       <section className="cta-card">
         <div>
           <div className="section-kicker">KEEP GOING</div>
           <h2>{next ? `Next up: ${next.title}` : "You made it through all seven lessons!"}</h2>
-          <p>{next ? next.goal : "Review your favourite topics and keep practising a little every day."}</p>
+          <p>{next ? next.goal : "Review the textbook checklists and practise a little every day."}</p>
         </div>
         <div className="hero-actions">
           {previous && <Link className="button secondary" href={previous.id === 1 ? "/lesson-1" : `/lesson/${previous.id}`}>← Previous</Link>}
