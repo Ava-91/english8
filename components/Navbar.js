@@ -8,7 +8,6 @@ const links = [
   { href: "/lesson-1", label: "Lesson", icon: "book" },
   { href: "/world-map", label: "Map", icon: "map" },
   { href: "/practice", label: "Practice", icon: "quiz" },
-  { href: "/about", label: "About", icon: "info" },
 ];
 
 function Icon({ name }) {
