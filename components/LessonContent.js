@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { lessons } from "@/data/course";
+import QuickCheck from "@/components/QuickCheck";
 
 export default function LessonContent({ id }) {
   const lesson = lessons.find((item) => item.id === Number(id));
@@ -50,16 +51,7 @@ export default function LessonContent({ id }) {
 
       <section className="section-card">
         <div className="section-kicker">QUICK CHECK</div>
-        <h2>{practice.question}</h2>
-        <div className="pattern-grid">
-          {practice.options.map((option, index) => (
-            <Link className="pattern-card" href={`/practice?lesson=${lesson.id}`} key={option}>
-              <p className="pattern-question">{String.fromCharCode(65 + index)}. {option}</p>
-              <p className="muted">Open practice to test what you learned.</p>
-            </Link>
-          ))}
-        </div>
-        <p className="muted">Answer check: {practice.answer}. {practice.explanation}</p>
+        <QuickCheck practice={practice} />
       </section>
 
       <section className="cta-card">
