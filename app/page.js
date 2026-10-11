@@ -2,7 +2,7 @@ import Link from "next/link";
 
 const features = [
   { icon: "map", title: "Explore the world", text: "Pick a country and discover what people from there are called.", href: "/world-map", label: "Open the map", tone: "mint" },
-  { icon: "book", title: "Learn the lesson", text: "Practice the useful words and sentence patterns from Lesson 1.", href: "/lesson-1", label: "Start learning", tone: "purple" },
+  { icon: "book", title: "Learn the lesson", text: "Practice the useful words and sentence patterns from Lesson 1.", href: "/lessons", label: "Explore lessons", tone: "purple" },
   { icon: "quiz", title: "Play & practice", text: "Answer quick questions, get instant feedback, and see your score.", href: "/practice", label: "Take the quiz", tone: "coral" },
 ];
 
@@ -18,14 +18,14 @@ export default function HomePage() {
     <div className="page-shell home-page">
       <section className="hero">
         <div className="hero-copy-column">
-          <div className="eyebrow eyebrow-pill">✦ ENGLISH 8 · LESSON 1</div>
+          <div className="eyebrow eyebrow-pill">✦ ENGLISH 8 · 7 LESSONS</div>
           <h1>Say hello to the <span>world!</span></h1>
           <p className="hero-copy">
             Countries, nationalities, and new words — learn them with colorful
             activities that make English feel like an adventure.
           </p>
           <div className="hero-actions">
-            <Link className="button primary" href="/lesson-1">Let’s learn <span aria-hidden="true">↗</span></Link>
+            <Link className="button primary" href="/lessons">Let’s learn <span aria-hidden="true">↗</span></Link>
             <Link className="button secondary" href="/world-map">Explore the map <span aria-hidden="true">🌍</span></Link>
           </div>
         </div>
@@ -53,10 +53,10 @@ export default function HomePage() {
       <section className="section-card lesson-preview">
         <div>
           <div className="section-kicker">YOUR FIRST ADVENTURE ✨</div>
-          <h2>Country · Nationality · Identity</h2>
-          <p>Learn how to ask where someone is from, describe a nationality, and explore examples from around the globe.</p>
+          <h2>A complete English adventure</h2>
+          <p>Explore all seven course themes: identity, routines, abilities, health, places, weather, and hobbies.</p>
         </div>
-        <Link className="button secondary" href="/lesson-1">Preview Lesson 1 →</Link>
+        <Link className="button secondary" href="/lessons">Explore all lessons →</Link>
       </section>
     </div>
   );
